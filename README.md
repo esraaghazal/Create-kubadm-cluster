@@ -1,4 +1,4 @@
-# Kubernetes Cluster Setup with kubeadm (CentOS Stream 9)
+# Kubernetes Cluster Setup with kubeadm (CentOS Stream 9) MANUAL
 
 ## Cluster Architecture
 
