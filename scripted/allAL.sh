@@ -8,6 +8,14 @@ set -e
 #Disable swap 
 swapoff -a
 
+#firewall config
+systemctl enable --now firewalld
+
+firewall-cmd --permanent --add-port=10250/tcp
+firewall-cmd --permanent --add-port=30000-32767/tcp
+
+firewall-cmd --reload
+
 #Disable selinux
 setenforce 0 2>/dev/null || true
 
