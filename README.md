@@ -296,3 +296,6 @@ spec:
     requests:
       storage: 1Gi
 ```
+
+<img width="1666" height="567" alt="image" src="https://github.com/user-attachments/assets/637681aa-df39-4419-8867-2af94861bae4" />
+
