@@ -2,21 +2,8 @@
 
 ## Cluster Architecture
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Kubernetes Cluster                   │
-│                                                         │
-│  ┌─────────────────────┐   ┌──────────────────────────┐ │
-│  │     Master Node     │   │      Worker Nodes        │ │
-│  │  192.168.117.138    │──▶│  node1: 192.168.117.144  │ │
-│  │                     │   │  node2: 192.168.117.133  │ │
-│  │  - API Server       │   │                          │ │
-│  │  - Controller Mgr   │   │  - kubelet               │ │
-│  │  - Scheduler        │   │  - containerd            │ │
-│  │  - etcd             │   │  - Calico agent          │ │
-│  └─────────────────────┘   └──────────────────────────┘ │
-└─────────────────────────────────────────────────────────┘
-```
+<img width="697" height="632" alt="image" src="https://github.com/user-attachments/assets/0bf64ab4-55f9-4a87-95f9-fb1b3054a914" />
+
 
 | Component | Version |
 |-----------|---------|
@@ -69,11 +56,6 @@ sudo vim /etc/hosts
 sudo swapoff -a
 sed -i '/swap/s/^/#/' /etc/fstab
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
-```
-
-### Disable Firewall
-```bash
-systemctl disable --now firewalld
 ```
 
 ### Enable Bridge Networking
