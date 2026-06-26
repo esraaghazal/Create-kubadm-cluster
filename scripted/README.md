@@ -51,7 +51,7 @@ Responsibilities:
 * Linux Server
 
   * Ubuntu 22.04 LTS
-  * CentOS Stream 9
+  * CentOS Stream 9 / amazon linux
 * Minimum 2 vCPU
 * Minimum 4 GB RAM
 * Internet connection
@@ -106,6 +106,31 @@ kubectl get pods -A
 * Bash
 * Linux
 
-## Author
+## AWS OR VM 
+* if you working on AWS make a security group with inbound rule that allow this ports
+* 6443/tcp
+* 2379-2380/tcp
+* 10250/tcp
+* 10257/tcp
+* 10259/tcp
 
-Esraa
+
+* if vm add this to all(Ubuntu/AL) script
+* on master
+*  systemctl enable --now firewalld
+
+   firewall-cmd --permanent --add-port=6443/tcp
+   firewall-cmd --permanent --add-port=2379-2380/tcp
+   firewall-cmd --permanent --add-port=10250/tcp
+   firewall-cmd --permanent --add-port=10257/tcp
+   firewall-cmd --permanent --add-port=10259/tcp
+
+   firewall-cmd --reload
+   
+* on worker
+* systemctl enable --now firewalld
+
+  firewall-cmd --permanent --add-port=10250/tcp
+  firewall-cmd --permanent --add-port=30000-32767/tcp
+ 
+  firewall-cmd --reload
