@@ -1,58 +1,25 @@
 #!/bin/bash
-# ubuntu
 
-# Disable Swap
-swapoff -a
+# Initialize Kubernetes Cluster
 
-# Disable Firewall
-systemctl disable --now ufw
+POD_NETWORK="192.168.0.0/16"
 
-# Enable Bridge Networking
-modprobe br_netfilter
-echo br_netfilter | tee /etc/modules-load.d/br_netfilter.conf
+kubeadm init \
+  --pod-network-cidr=$POD_NETWORK \
+  --cri-socket=unix:///run/containerd/containerd.sock
 
-cat <<EOF >/etc/sysctl.d/kubernetes.conf
-net.bridge.bridge-nf-call-ip6tables = 1
-net.bridge.bridge-nf-call-iptables = 1
-net.ipv4.ip_forward = 1
-EOF
+# Configure kubectl
 
-sysctl --system
+mkdir -p $HOME/.kube
 
+cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 
-# Install Required Packages
-apt update
-apt install -y apt-transport-https ca-certificates curl gpg
+chown $(id -u):$(id -g) $HOME/.kube/config
 
-# Add Kubernetes Repository
-mkdir -p /etc/apt/keyrings
+# Install Calico Network Plugin
 
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key \
-| gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.3/manifests/calico.yaml
 
-echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /' \
-| tee /etc/apt/sources.list.d/kubernetes.list
+# Generate Join Command
 
-
-apt update
-
-# Install Kubernetes
-apt install -y kubelet kubeadm kubectl
-
-apt-mark hold kubelet kubeadm kubectl
-
-# Install Containerd
-apt install -y containerd
-
-mkdir -p /etc/containerd
-
-containerd config default > /etc/containerd/config.toml
-
-sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
-
-systemctl enable --now containerd
-
-systemctl restart containerd
-
-systemctl enable --now kubelet
-
+kubeadm token create --print-join-command
